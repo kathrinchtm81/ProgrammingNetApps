@@ -8,17 +8,19 @@ import ua.kpi.its.lab.rest.repository.EmployeeRepository
 import ua.kpi.its.lab.rest.svc.EmployeeService
 @Service
 class EmployeeServiceImpl(private val employeeRepository: EmployeeRepository) : EmployeeService {
+    @PreAuthorize("hasAuthority('EDITOR')")
     override fun createEmployee(employeeRequest: EmployeeRequest): EmployeeResponse {
         val employee = Employee(fullName = employeeRequest.fullName, category = employeeRequest.category)
         val savedEmployee = employeeRepository.save(employee)
         return EmployeeResponse.fromEntity(savedEmployee)
     }
-
+    @PreAuthorize("hasAuthority('VIEWER')")
     override fun getEmployeeById(id: Long): EmployeeResponse {
         val employee = employeeRepository.findById(id).orElseThrow()
         return EmployeeResponse.fromEntity(employee)
     }
 
+    @PreAuthorize("hasAuthority('EDITOR')")
     override fun updateEmployee(id: Long, employeeRequest: EmployeeRequest): EmployeeResponse {
         val employee = employeeRepository.findById(id).orElseThrow()
         employee.fullName = employeeRequest.fullName
@@ -27,6 +29,7 @@ class EmployeeServiceImpl(private val employeeRepository: EmployeeRepository) : 
         return EmployeeResponse.fromEntity(updatedEmployee)
     }
 
+    @PreAuthorize("hasAuthority('EDITOR')")
     override fun deleteEmployee(id: Long): Boolean {
         employeeRepository.deleteById(id)
         return true

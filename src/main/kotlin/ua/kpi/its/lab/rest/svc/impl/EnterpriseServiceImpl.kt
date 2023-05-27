@@ -9,17 +9,20 @@ import ua.kpi.its.lab.rest.svc.EnterpriseService
 
 @Service
 class EnterpriseServiceImpl(private val enterpriseRepository: EnterpriseRepository) : EnterpriseService {
+    @PreAuthorize("hasAuthority('EDITOR')")
     override fun createEnterprise(enterpriseRequest: EnterpriseRequest): EnterpriseResponse {
         val enterprise = Enterprise(name = enterpriseRequest.name, industry = enterpriseRequest.industry)
         val savedEnterprise = enterpriseRepository.save(enterprise)
         return EnterpriseResponse.fromEntity(savedEnterprise)
     }
 
+    @PreAuthorize("hasAuthority('VIEWER')")
     override fun getEnterpriseById(id: Long): EnterpriseResponse {
         val enterprise = enterpriseRepository.findById(id).orElseThrow()
         return EnterpriseResponse.fromEntity(enterprise)
     }
 
+    @PreAuthorize("hasAuthority('EDITOR')")
     override fun updateEnterprise(id: Long, enterpriseRequest: EnterpriseRequest): EnterpriseResponse {
         val enterprise = enterpriseRepository.findById(id).orElseThrow()
         enterprise.model = enterpriseRequest.name
@@ -28,6 +31,7 @@ class EnterpriseServiceImpl(private val enterpriseRepository: EnterpriseReposito
         return EnterpriseResponse.fromEntity(updatedEnterprise)
     }
 
+    @PreAuthorize("hasAuthority('EDITOR')")
     override fun deleteEnterprise(id: Long): Boolean {
         enterpriseRepository.deleteById(id)
         return true
