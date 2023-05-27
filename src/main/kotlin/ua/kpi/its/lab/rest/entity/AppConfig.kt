@@ -2,9 +2,9 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-open class AppConfig {
+class AppConfig {
     @Bean
-    open fun enterpriseContainer(): EnterpriseContainer {
-        return EnterpriseContainer()
+    fun trainContainer(): TrainContainer {
+        return TrainContainer()
     }
 }
